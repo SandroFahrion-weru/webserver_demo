@@ -1,0 +1,8 @@
+elasticsearch.hosts: ["http://elasticsearch:9200"]
+elasticsearch.username: "weru"
+elasticsearch.password: "weru"
+xpack.security.encryptionKey: "abcdefghijklmnopqrstuvwxyz123456"
+xpack.encryptedSavedObjects.encryptionKey: "abcdefghijklmnopqrstuvwxyz123456"
+
+xpack.reporting.encryptionKey: "abcdefghijklmnopqrstuvwxyz123456"
+server.host: "0.0.0.0"

@@ -1,0 +1,85 @@
+networks:
+    webserver_demo:                                         # Docker Netzwerk definieren
+        driver: bridge
+
+services:
+  traefik:                                                  # Image Name
+    image: traefik:v3.3                                     # Image (wird automatisch gezogen)
+    container_name: traefik-proxy                           # Optional: sonst erhält der Container nur eine ID
+    networks:                                               # Zum lokalen Docker-Netzwerk hinzufügen
+      - webserver_demo
+    command:                                                # Befehle, die beim Start ausgeführt werden
+      - "--api.insecure=true"
+      - "--providers.docker=true"
+      - "--entrypoints.web.address=:80"
+      - "--entrypoints.websecure.address=:443"
+      - "--entrypoints.websecure.http.tls=true"
+      - "--log.level=DEBUG"
+    ports:                                                  # Portzuweisungen
+      - "80:80"                                             # HTTP
+      - "443:443"                                           # HTTPS
+      - "8080:8080"                                         # http-Port für Traefik Dashboard: http://localhost:8080
+    volumes:                                                # Verzeichnisse und Dateien Container-intern hinzufügen 
+      - /var/run/docker.sock:/var/run/docker.sock
+      - ./certs:/certs                                      # Zertifikate
+      - ./config/traefik.yaml:/etc/traefik/traefik.yaml     # Konfigurationsdatei wird im Container hinzugefügt unter "/etc/traefik/traefik.yaml"
+
+  elasticsearch:
+    image: docker.elastic.co/elasticsearch/elasticsearch:8.10.4
+    container_name: elasticsearch
+    networks:
+      - webserver_demo
+    ports:
+      - "9200:9200"
+    volumes:
+      - ./elasticsearch-data:/usr/share/elasticsearch/data
+      - ./certs:/usr/share/elasticsearch/config/certs
+      - ./config/users:/usr/share/elasticsearch/config/users
+      - ./config/users_roles:/usr/share/elasticsearch/config/users_roles
+      - ./config/elasticsearch.yml:/usr/share/elasticsearch/config/elasticsearch.yml
+    environment:                                             # Umgebungsvariablen
+      - ES_JAVA_OPTS=-Xms2g -Xmx2g                           # Ressourcen des Java Heap begrenzen
+      - discovery.type=single-node
+      - bootstrap.memory_lock=true
+    ulimits:
+      memlock:
+        soft: -1
+        hard: -1
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.elasticsearch.rule=Host(`elasticsearch.local`)"
+      - "traefik.http.services.elasticsearch.loadbalancer.server.port=9200"
+
+  logstash:
+    image: docker.elastic.co/logstash/logstash:8.10.4
+    container_name: logstash
+    networks:
+      - webserver_demo
+    ports:
+      - "5044:5044" # Filebeat input
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.logstash.rule=Host(`logstash.local`)"
+      - "traefik.http.services.logstash.loadbalancer.server.port=5044"
+    volumes:
+      - ./config/logstash.yml:/usr/share/logstash/config/logstash.yml
+      - ./config/logstash.conf:/usr/share/logstash/pipeline/logstash.conf
+    environment:
+      - LS_JAVA_OPTS=-Xms512m -Xmx512m
+
+
+  kibana:
+    image: docker.elastic.co/kibana/kibana:8.10.4
+    container_name: kibana
+    networks:
+      - webserver_demo
+    ports:
+      - "5601:5601"
+    environment:
+      - ELASTICSEARCH_HOSTS=http://elasticsearch:9200
+    volumes:
+      - ./config/kibana.yml:/usr/share/kibana/config/kibana.yml
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.kibana.rule=Host(`kibana.local`)"
+      - "traefik.http.services.kibana.loadbalancer.server.port=5601"

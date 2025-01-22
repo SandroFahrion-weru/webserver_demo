@@ -1,0 +1,15 @@
+node.name: ${HOSTNAME}
+discovery.type: single-node
+
+node.roles: [ "master", "data", "ingest", "remote_cluster_client" ]
+
+# Netzwerkbindung (localhost)
+network.host: 0.0.0.0
+http.port: 9200
+
+xpack.security.http.ssl.enabled: false
+xpack.security.enabled: false
+
+# xpack.security.http.ssl.certificate: "/usr/share/elasticsearch/config/certs/fullchain.pem"
+# xpack.security.http.ssl.key: "/usr/share/elasticsearch/config/certs/privkey.pem"
+# xpack.security.http.ssl.certificate_authorities: ["/usr/share/elasticsearch/config/certs/fullchain.pem"]

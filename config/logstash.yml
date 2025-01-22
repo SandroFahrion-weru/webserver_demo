@@ -1,0 +1,12 @@
+
+# Pipeline-Konfiguration
+pipeline.batch.size: 125
+pipeline.workers: 2
+
+# Logging
+log.level: info
+
+# Elasticsearch-Verbindung für Monitoring
+xpack.monitoring.enabled: true
+xpack.monitoring.elasticsearch.hosts: ["http://elasticsearch:9200"]
+
