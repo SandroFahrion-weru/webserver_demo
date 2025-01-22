@@ -2,11 +2,17 @@ networks:
     webserver_demo:                                         # Docker Netzwerk definieren
         driver: bridge
 
+volumes:
+  test-volume:
+
 services:
+
+#-----------------------------------------------------------------------------------------------------------------------------------------------
+
   traefik:                                                  # Image Name
     image: traefik:v3.3                                     # Image (wird automatisch gezogen)
     container_name: traefik-proxy                           # Optional: sonst erhält der Container nur eine ID
-    networks:                                               # Zum lokalen Docker-Netzwerk hinzufügen
+    networks:                                               # Zum lokalen Docker-Netzwerk hinzufügen (wird benötigt, damit die Dienste untereinander arbeiten können)
       - webserver_demo
     command:                                                # Befehle, die beim Start ausgeführt werden
       - "--api.insecure=true"
@@ -24,6 +30,50 @@ services:
       - ./certs:/certs                                      # Zertifikate
       - ./config/traefik.yaml:/etc/traefik/traefik.yaml     # Konfigurationsdatei wird im Container hinzugefügt unter "/etc/traefik/traefik.yaml"
 
+#-----------------------------------------------------------------------------------------------------------------------------------------------
+
+  nextcloud:
+    image: nextcloud:latest
+    container_name: nextcloud
+    networks:
+      - webserver_demo
+    environment:                                            # Umgebungsvariablen
+    # Variablen müssen vor dem ersten Start angegeben sein, um die Einrichtung zu automatisieren
+      - NEXTCLOUD_ADMIN_USER=admin
+      - NEXTCLOUD_ADMIN_PASSWORD=weru
+      - MYSQL_HOST=database
+      - MYSQL_DATABASE=nextcloud-db
+      - MYSQL_USER=weru
+      - MYSQL_PASSWORD=weru
+      
+      - NEXTCLOUD_LOGLEVEL=2
+    volumes:
+      - ./nextcloud:/var/www/html
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.nextcloud.rule=Host(`nextcloud.local`)"
+      - "traefik.http.services.nextcloud.loadbalancer.server.port=80"
+    depends_on:
+      - database
+    restart: always
+
+#-----------------------------------------------------------------------------------------------------------------------------------------------
+
+  database:
+    image: mariadb:11.6.2
+    container_name: mariadb
+    networks:
+      - webserver_demo
+    environment:
+      - MYSQL_ROOT_PASSWORD=root_password
+      - MYSQL_DATABASE=nextcloud-db
+      - MYSQL_USER=weru
+      - MYSQL_PASSWORD=weru
+    volumes:
+      - ./mariaDB:/var/lib/mysql
+
+#-----------------------------------------------------------------------------------------------------------------------------------------------
+
   elasticsearch:
     image: docker.elastic.co/elasticsearch/elasticsearch:8.10.4
     container_name: elasticsearch
@@ -37,7 +87,7 @@ services:
       - ./config/users:/usr/share/elasticsearch/config/users
       - ./config/users_roles:/usr/share/elasticsearch/config/users_roles
       - ./config/elasticsearch.yml:/usr/share/elasticsearch/config/elasticsearch.yml
-    environment:                                             # Umgebungsvariablen
+    environment:
       - ES_JAVA_OPTS=-Xms2g -Xmx2g                           # Ressourcen des Java Heap begrenzen
       - discovery.type=single-node
       - bootstrap.memory_lock=true
@@ -50,13 +100,15 @@ services:
       - "traefik.http.routers.elasticsearch.rule=Host(`elasticsearch.local`)"
       - "traefik.http.services.elasticsearch.loadbalancer.server.port=9200"
 
+#-----------------------------------------------------------------------------------------------------------------------------------------------
+
   logstash:
     image: docker.elastic.co/logstash/logstash:8.10.4
     container_name: logstash
     networks:
       - webserver_demo
     ports:
-      - "5044:5044" # Filebeat input
+      - "5044:5044" # Filebeat input port
     labels:
       - "traefik.enable=true"
       - "traefik.http.routers.logstash.rule=Host(`logstash.local`)"
@@ -67,6 +119,7 @@ services:
     environment:
       - LS_JAVA_OPTS=-Xms512m -Xmx512m
 
+#-----------------------------------------------------------------------------------------------------------------------------------------------
 
   kibana:
     image: docker.elastic.co/kibana/kibana:8.10.4

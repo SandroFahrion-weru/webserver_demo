@@ -1,82 +1,151 @@
-# Webserver-Demo Dokumentation
+# Azubi Laborumgebung
 
 ## Inhaltsverzeichnis
-1. [Einleitung](#einleitung)
-2. [Ziele der Demo](#ziele-der-demo)
-3. [Systemübersicht](#systemübersicht)
-4. [Vorbereitung](#vorbereitung)
-5. [Schritt-für-Schritt-Anleitung](#schritt-für-schritt-anleitung)
-    - [Server-Einrichtung](#server-einrichtung)
-    - [Webserver-Installation](#webserver-installation)
-    - [Beispielseite bereitstellen](#beispielseite-bereitstellen)
-6. [Testen der Installation](#testen-der-installation)
-7. [Fehlerbehebung](#fehlerbehebung)
-8. [Zusätzliche Hinweise](#zusätzliche-hinweise)
-9. [Passwörter und Zugangsdaten](#passwörter-und-zugangsdaten)
-10. [Ressourcen](#ressourcen)
+- [Azubi Laborumgebung](#azubi-laborumgebung)
+    - [Inhaltsverzeichnis](#inhaltsverzeichnis)
+- [1. Übersicht](#1-übersicht)
+    - [1.1 Host](#11-host)
+        - [1.1.1 Software](#111-software)
+        - [1.1.2 Hardware](#112-hardware)
+    - [1.2 Passwörter und Zugangsdaten](#12-passwörter-und-zugangsdaten)
+    - [1.3 Remote Zugriff](#13-remote-zugriff)
+        - [AnyDesk](#anydesk)
+        - [TeamViewer](#teamviewer)
+    - [1.4 Virtualisierung](#14-virtualisierung)
+        - [VirtualBox](#virtualbox)
+        - [Docker](#docker)
+        - [WSL (Windows Subsystem für Linux)](#wsl-(windows-subsystem-für-linux))
+        
+- [2. Wichtige Befehle](wichtige%20befehle.md)
+- [3. Setup](#3-setup)
+    - [3.1 Host](#31-host)
+        - [Windows 11 Home via Rufus](#windows-11-home-via-rufus)
+        - [Benötigte Windows-Features](#windows-features)
+    - [3.2 WSL](#32-wsl)
+    - [3.3 Oracle VirtualBox](#33-oracle-virtualbox)
+    - [3.4 nützliche Extensions für VS Code:](#34-nützliche-extensions-für-vs-code)
+    - [3.5 Docker](#35-docker)
+    - [3.6 Git](#36-git)
+        - [Git Credentials konfigurieren](#git-credentials-konfigurieren)
+- [4. Tests](#4-tests)
+- [5. Docker Demo](#5-docker-demo)
+- [6. Fehlerbehebungen](#6-fehlerbehebungen)
+---
+
+# 1. Übersicht
+## 1.1 **Host**
+(Höllenmaschine)
+### 1.1.1 **Software**
+- **Windows 11 Home** (unlizensiert)
+### 1.1.2 **Hardware**
+- **64 GB DDR4**
+- **2TB M.2 NVMe SSD**
+
+## 1.2 Passwörter und Zugangsdaten
+### **Windows-User**
+Username: `install`
+
+Passwort: `azubilabor`
+
+---
+### **Ubuntu (WSL)**
+Username: `weru`
+
+Passwort: `weru`
+
+---
+### **Ubuntu (VirtualBox)**
+Username: `weru`
+
+Passwort: `weru`
+
+---
+### [**GitHub.com**](https://github.com/SandroFahrion-weru)
+
+
+Username: `SandroFahrion-weru`
+
+Mail: `sfa@dovista.com`
+
+Passwort: `KroatienDummy900`
+
+Access Token: `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`
+
+---
+### **Hub.Docker.com**
+(per GitHub Account)
+
+Username: `sandrofahrionweru`
+
+---
+### **Nextcloud Server**
+[nextcloud.local](http://nextcloud.local/)
+
+Username: `admin`
+
+Passwort: `weru`
+
+
+---
+### **ELK-Stack**
+[kibana.local](http://kibana.local/)
+
+## 1.3 **Remote Zugriff**
+### **AnyDesk**
+
+ID: `568433824`
+
+Passwort: `wg.rem+tv`
+
+### **TeamViewer**
+
+ID: `1771198715`
+
+Passwort: `wg.rem+tv`
+
+
+## 1.4 **Virtualisierung**
+
+### **VirtualBox**
+- OpenSource (Personal Use and Educational License) 
+- Für VMs 
+- Detaillierte Dokumentation vorhanden (Betriebsanleitung mit 1256 Seiten)
+- Unterstützung für RDP
+
+### **Docker**
+
+- Freie Nutzung (also ohne Lizenz produktiv nutzbar, jedoch nicht Docker Desktop)
+
+### **WSL (Windows Subsystem für Linux)**
+Installierte Distros:
+- Ubuntu
+- docker-desktop (automatisch von Docker Desktop erstellt)
 
 ---
 
-## Wichtige Befehle
-1. Systemauslastung der Docker Container überwachen:
-   ```bash
-   docker stats
-2. docker ps:
-   ```bash
-   docker ps
-1. Systemauslastung der Docker Container überwachen:
-   ```bash
-   docker stats
-1. Systemauslastung der Docker Container überwachen:
-   ```bash
-   docker stats
-1. Systemauslastung der Docker Container überwachen:
-   ```bash
-   docker stats
-1. Systemauslastung der Docker Container überwachen:
-   ```bash
-   docker stats
----
+# 3. Setup
 
-## Ziele der Demo
-- Verstehen der grundlegenden Komponenten eines Webservers.
-- Installieren und Konfigurieren eines Webservers (z. B. Nginx oder Apache).
-- Bereitstellen und Testen einer statischen HTML-Seite.
-- Grundlegende Fehlerbehebung.
-
----
-
-## Vorbereitung
-### Erforderliche Software
-- Texteditor (Visual Studio Code)
-- SSH-Client (z. B. PuTTY, Terminal oder VS Code)
-
-### Voraussetzungen
-- Internetzugang
-
----
-
-## Schritt-für-Schritt-Anleitung
-
-
-### Windows 11 Home via Rufus
+## 3.1 Host
+### **Windows 11 Home via Rufus**
 [https://rufus.ie/de/](https://rufus.ie/de/)
 
-#### In BIOS/UEFI
+### **In BIOS/UEFI**
 - **Virtualisierungstechnologie aktivieren** (z.B. Intel Virtualization Technology)
 
-#### Internetzugriff
+### **Internetzugriff**
 - Via LTE-Router
 
-#### Grafikkarte
+### **Grafik**
 - Aktuelle Nvidia Studio Treiber installiert
 
-#### Windows-Features nachinstalliert:
+### **Windows-Features**
+Systemsteuerung -> Programme & Features -> "Windows Features aktivieren oder deaktivieren"
 - Virtual Machine Platform
 - Windows-Hypervisor-Plattform
 - Windows-Subsystem für Linux
 
-### WSL (Windows Subsystem for Linux)
+## 3.2 **WSL**
+(**W**indows **S**ubsystem for **L**inux)
 1. **In CMD ausführen:**  
    `WSL.exe --update`
 2. **Installation prüfen:**  
@@ -93,12 +162,15 @@
    Windows-Version: 10.0.26100.1742  
    ```
 
-### Downloads – Oracle VirtualBox
+## 3.3 **Oracle VirtualBox**
+### **Downloads**
+[https://www.virtualbox.org/wiki/Downloads](https://www.virtualbox.org/wiki/Downloads) 
 - **Extension Pack**
 - **User Guide**
 - **Host App**
-- VirtualBox Guest Additions ISO  
-  [Oracle VM VirtualBox - Downloads | Oracle Technology Network](https://www.oracle.com)
+
+[https://www.oracle.com/virtualization/technologies/vm/downloads/virtualbox-downloads.html](https://www.oracle.com/virtualization/technologies/vm/downloads/virtualbox-downloads.html)
+- **VirtualBox Guest Additions ISO**
 
 #### Guest Additions installieren:
 1. VM in VirtualBox starten
@@ -106,24 +178,41 @@
 3. **"Optische Laufwerke"** und dann die `VBoxGuestAdditions.iso` auswählen
 4. Alternativ: Direkt auf **"Gasterweiterungen einlegen..."**
 
-### Windows Server 2022
-- **Evaluation Edition**
+### **Windows Server 2022**
+- Evaluation Edition
 - Desktop Experience
 - 180 Tage Laufzeit, 3x verlängerbar (= 540 Tage)
 
 #### Laufzeit verlängern:
-1. In PowerShell:
+In PowerShell:
    `slmgr.vbs /rearm`
 
-### VS Code Extensions:
+## 3.4 **nützliche Extensions für VS Code:**
 - Docker
 - WSL
 - YAML
 
-### Weitere Software:
-- Git installiert
-- TeamViewer Host installiert
-
-### Docker
+## 3.5 Docker
 [Docker Desktop - Installation für Windows](https://docs.docker.com/desktop/setup/install/windows-install/)
 
+## 3.6 Git
+### Installer für Git (64-Bit) herunterladen und ausführen
+[Git für Windows: Downloads](https://git-scm.com/downloads/win)
+
+---
+### Git Credentials konfigurieren
+In Powershell, Git CLI oder Bash:
+
+    git config --global user.email "Email"
+    git config --global user.name "Name"
+
+Dementsprechend:
+
+    git config --global user.email "sfa@dovista.com"                                      
+    git config --global user.name "SandroFahrion-weru"
+
+# 4. Tests
+
+# 5. Docker Demo
+
+# 6. Fehlerbehebungen
