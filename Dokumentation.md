@@ -69,7 +69,7 @@ Mail: `sfa@dovista.com`
 
 Passwort: `KroatienDummy900`
 
-Access Token: `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`
+Access Token: `https://nextcloud.weru.de/s/t27TgMMkLb3r57L`
 
 ---
 ### **Hub.Docker.com**
