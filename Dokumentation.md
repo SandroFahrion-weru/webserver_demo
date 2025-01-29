@@ -115,6 +115,8 @@ Passwort: `wg.rem+tv`
 ### **Docker**
 
 - Freie Nutzung (also ohne Lizenz produktiv nutzbar, jedoch nicht Docker Desktop)
+- Für Container
+- Detaillierte Dokumentation unter https://docs.docker.com/
 
 ### **WSL (Windows Subsystem für Linux)**
 Installierte Distros:
